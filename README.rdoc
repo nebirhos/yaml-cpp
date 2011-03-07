@@ -1,0 +1,8 @@
+= yaml-cpp
+== A YAML parser and emitter for C++
+
+This is just a mirror of the project on
+GoogleCode[http://code.google.com/p/yaml-cpp/].
+
+Branch _trunk_ reflects the original svn trunk, branch _master_
+contains a simplified makefile for building a static library.
