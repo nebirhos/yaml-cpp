@@ -6,3 +6,10 @@ GoogleCode[http://code.google.com/p/yaml-cpp/].
 
 Branch _trunk_ reflects the original svn trunk, branch _master_
 contains a simplified makefile for building a static library.
+
+Svn tagged branches are available as git tags, too!
+
+=== Changelog
+
+* 2011-04-08: fixed a nasty bug on binary data emitter
+* 2011-03-07: added Makefile
