@@ -31,7 +31,6 @@ CPPFLAGS += -Iinclude/
 CXXFLAGS += -Wall
 
 TEST_SOURCES = $(wildcard test/*.cpp)
-TEST_HEADERS = $(wildcard test/*.h)
 TEST_OBJECTS = $(TEST_SOURCES:.cpp=.o)
 
 all: $(LIBRARY)
@@ -48,5 +47,8 @@ $(LIBRARY): $(OBJECTS)
 $(TEST): $(LIBRARY) $(TEST_OBJECTS)
 	$(CXX) -o $(TEST) $(TEST_OBJECTS) $(LIBRARY)
 
-clean:
-	rm -f $(LIBRARY) $(OBJECTS) $(TEST_OBJECTS)
+clean: clean-test
+	rm -f $(LIBRARY) $(OBJECTS)
+
+clean-test:
+	rm -f $(TEST_OBJECTS)
