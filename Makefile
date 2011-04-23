@@ -1,6 +1,7 @@
 CXX = g++
 AR = ar
 LIBRARY = libyaml-cpp.a
+TEST    = yaml-cpp-test
 SOURCES = src/aliasmanager.cpp \
           src/conversion.cpp \
           src/directives.cpp \
@@ -29,13 +30,23 @@ OBJECTS = $(SOURCES:.cpp=.o)
 CPPFLAGS += -Iinclude/
 CXXFLAGS += -Wall
 
+TEST_SOURCES = $(wildcard test/*.cpp)
+TEST_HEADERS = $(wildcard test/*.h)
+TEST_OBJECTS = $(TEST_SOURCES:.cpp=.o)
+
 all: $(LIBRARY)
+
+test: $(TEST)
 
 .cpp.o:
 	$(CXX) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
 
 $(LIBRARY): $(OBJECTS)
 	ar -cq $(LIBRARY) $(OBJECTS)
+	ranlib $(LIBRARY)
+
+$(TEST): $(LIBRARY) $(TEST_OBJECTS)
+	$(CXX) -o $(TEST) $(TEST_OBJECTS) $(LIBRARY)
 
 clean:
-	rm -f $(LIBRARY) $(OBJECTS)
+	rm -f $(LIBRARY) $(OBJECTS) $(TEST_OBJECTS)
