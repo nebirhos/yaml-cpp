@@ -883,7 +883,7 @@ namespace Test
 
 		bool BinaryData()
 		{
-			std::string input = "{b: !!binary \"Y2lhbw==\"}";
+			std::string input = "{b: !!binary \"Y2lhbw==\"}"; // ciao
 			std::stringstream stream(input);
 			YAML::Parser parser(stream);
 			YAML::Node doc;
@@ -891,8 +891,8 @@ namespace Test
 
 			YAML::BinaryInput bin;
 			doc["b"] >> bin;
-			std::cout << "bin.data(): " << bin.data() << std::endl;
-			std::cout << "bin.size(): " << bin.size() << std::endl;
+			// std::cout << "bin.data(): " << bin.data() << std::endl;
+			// std::cout << "bin.size(): " << bin.size() << std::endl;
 
 			return false;
 		}

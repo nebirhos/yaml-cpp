@@ -8,6 +8,7 @@
 
 #include "yaml-cpp/null.h"
 #include "yaml-cpp/traits.h"
+#include "yaml-cpp/emittermanip.h"
 #include <limits>
 #include <string>
 #include <sstream>
@@ -18,9 +19,10 @@ namespace YAML
 		output = input;
 		return true;
 	}
-	
+
 	YAML_CPP_API bool Convert(const std::string& input, bool& output);
 	YAML_CPP_API bool Convert(const std::string& input, _Null& output);
+	YAML_CPP_API bool Convert(const std::string& input, BinaryInput& output);
 	
 	inline bool IsInfinity(const std::string& input) {
 		return input == ".inf" || input == ".Inf" || input == ".INF" || input == "+.inf" || input == "+.Inf" || input == "+.INF";

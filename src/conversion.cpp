@@ -85,5 +85,11 @@ namespace YAML
 	{
 		return input.empty() || input == "~" || input == "null" || input == "Null" || input == "NULL";
 	}
+
+	bool Convert(const std::string& input, BinaryInput& output)
+	{
+    // FIXME: base64 decode
+    return true;
+	}
 }
 
