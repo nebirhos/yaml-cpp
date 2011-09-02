@@ -7,6 +7,7 @@
 
 
 #include "yaml-cpp/nodeutil.h"
+#include "yaml-cpp/emittermanip.h"
 #include <cassert>
 
 namespace YAML
@@ -23,6 +24,17 @@ namespace YAML
 	inline void operator >> (const Node& node, T& value) {
 		if(!ConvertScalar(node, value))
 			throw InvalidScalar(node.m_mark);
+	}
+
+	inline void operator >> (const Node& node, BinaryInput& b) {
+		std::string s;
+		node.GetScalar(s);
+		std::cout << "LOOOOOOOOOL: " << s << std::endl;
+		b._data = new unsigned char[3];
+		b._data[0] = 'A';
+		b._data[1] = 'B';
+		b._data[2] = 0;
+		b._size = 3;
 	}
 	
 	template <typename T>

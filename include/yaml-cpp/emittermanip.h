@@ -135,6 +135,19 @@ namespace YAML
 	inline _Binary Binary(const unsigned char *data, std::size_t size) {
 		return _Binary(data, size);
 	}
+
+	class BinaryInput {
+	public:
+		BinaryInput() : _size(0) {};
+		~BinaryInput() { delete[] _data; };
+		unsigned char* data() { return _data; };
+		size_t size() { return _size; };
+
+	public:
+		unsigned char* _data;
+		std::size_t _size;
+	};
+
 }
 
 #endif // EMITTERMANIP_H_62B23520_7C8E_11DE_8A39_0800200C9A66

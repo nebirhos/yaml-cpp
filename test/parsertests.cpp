@@ -880,6 +880,22 @@ namespace Test
 				return false;
 			return true;
 		}
+
+		bool BinaryData()
+		{
+			std::string input = "{b: !!binary \"Y2lhbw==\"}";
+			std::stringstream stream(input);
+			YAML::Parser parser(stream);
+			YAML::Node doc;
+			parser.GetNextDocument(doc);
+
+			YAML::BinaryInput bin;
+			doc["b"] >> bin;
+			std::cout << "bin.data(): " << bin.data() << std::endl;
+			std::cout << "bin.size(): " << bin.size() << std::endl;
+
+			return false;
+		}
 	}
 	
 	namespace {
@@ -1159,6 +1175,7 @@ namespace Test
 		RunParserTest(&Parser::Infinity, "infinity", passed, total);
 		RunParserTest(&Parser::NaN, "NaN", passed, total);
 		RunParserTest(&Parser::NonConstKey, "non const key", passed, total);
+		RunParserTest(&Parser::BinaryData, "binary data", passed, total);
 		
 		RunEncodingTest(&EncodeToUtf8, false, "UTF-8, no BOM", passed, total);
 		RunEncodingTest(&EncodeToUtf8, true, "UTF-8 with BOM", passed, total);
