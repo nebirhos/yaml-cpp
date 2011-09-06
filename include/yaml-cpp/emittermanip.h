@@ -139,11 +139,13 @@ namespace YAML
 	class BinaryInput {
 	public:
 		BinaryInput() : _size(0), _data(0) {};
-		~BinaryInput() { if(!_data) delete[] _data; };
+		~BinaryInput() { if(_data) delete[] _data; };
 		unsigned char* data() { return _data; };
 		size_t size() { return _size; };
 
-	public:
+		friend YAML_CPP_API bool Convert (const std::string&, BinaryInput&);
+
+	private:
 		unsigned char* _data;
 		std::size_t _size;
 	};
