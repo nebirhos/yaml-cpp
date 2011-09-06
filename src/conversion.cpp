@@ -86,10 +86,47 @@ namespace YAML
 		return input.empty() || input == "~" || input == "null" || input == "Null" || input == "NULL";
 	}
 
+	inline int base64size(const std::string& input)
+	{
+		int pad = 0, in_size = input.size();
+		for (; input[in_size-1] == '='; pad++, in_size--) {}
+		return ( in_size*6 - pad*2 ) / 8;
+	}
+
 	bool Convert(const std::string& input, BinaryInput& output)
 	{
-    // FIXME: base64 decode
-    return true;
+		const std::string base64_chars =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			"abcdefghijklmnopqrstuvwxyz"
+			"0123456789+/";
+
+		int size = base64size(input);
+
+		output._size = size;
+		output._data = new unsigned char[size];
+
+		unsigned char buffer[4];
+		int block = 0;
+
+		for (int i=0; i < input.size(); ++i) {
+			char c = 0;
+			if (input[i] != '=') {
+				c = base64_chars.find( input[i] );
+			}
+			if (c == -1) {
+				return false;
+			}
+
+			buffer[i % 4] = c;
+			if ( (i % 4) == (3) ) {
+				output._data[ block   ] = (buffer[0] << 2) + ((buffer[1] & 0x30) >> 4);
+				output._data[ block+1 ] = ((buffer[1] & 0xf) << 4) + ((buffer[2] & 0x3c) >> 2);
+				output._data[ block+2 ] = ((buffer[2] & 0x3) << 6) + buffer[3];
+				block += 3;
+			}
+		}
+
+		return true;
 	}
 }
 

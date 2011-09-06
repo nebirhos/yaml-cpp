@@ -2,6 +2,7 @@
 #include "yaml-cpp/yaml.h"
 #include <sstream>
 #include <algorithm>
+#include <string.h>
 
 namespace Test
 {
@@ -883,7 +884,8 @@ namespace Test
 
 		bool BinaryData()
 		{
-			std::string input = "{b: !!binary \"Y2lhbw==\"}"; // ciao
+			char* test = "ciao";
+			std::string input = "{b: !!binary \"Y2lhbwA=\"}"; // ciao
 			std::stringstream stream(input);
 			YAML::Parser parser(stream);
 			YAML::Node doc;
@@ -891,10 +893,18 @@ namespace Test
 
 			YAML::BinaryInput bin;
 			doc["b"] >> bin;
-			// std::cout << "bin.data(): " << bin.data() << std::endl;
-			// std::cout << "bin.size(): " << bin.size() << std::endl;
+			std::cout << "bin.data(): " << bin.data() << std::endl;
+			std::cout << "bin.size(): " << bin.size() << std::endl;
 
-			return false;
+			if ( strlen(test)+1 != bin.size() ) {
+				return false;
+			}
+
+			if ( memcmp(bin.data(),test, bin.size()) ) {
+				return false;
+			}
+
+			return true;
 		}
 	}
 	
