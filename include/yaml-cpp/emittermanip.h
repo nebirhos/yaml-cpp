@@ -138,7 +138,7 @@ namespace YAML
 
 	class BinaryInput {
 	public:
-		BinaryInput() : _size(0), _data(0) {};
+		BinaryInput() : _data(0), _size(0) {};
 		~BinaryInput() { if(_data) delete[] _data; };
 		unsigned char* data() { return _data; };
 		size_t size() { return _size; };

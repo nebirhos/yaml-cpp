@@ -108,7 +108,7 @@ namespace YAML
 		unsigned char buffer[4];
 		int block = 0;
 
-		for (int i=0; i < input.size(); ++i) {
+		for (unsigned int i=0; i < input.size(); ++i) {
 			char c = 0;
 			if (input[i] != '=') {
 				c = base64_chars.find( input[i] );

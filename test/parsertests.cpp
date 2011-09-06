@@ -884,7 +884,7 @@ namespace Test
 
 		bool BinaryData()
 		{
-			char* test = "ciao";
+			std::string test = "ciao";
 			std::string input = "{b: !!binary \"Y2lhbwA=\"}"; // ciao
 			std::stringstream stream(input);
 			YAML::Parser parser(stream);
@@ -896,11 +896,11 @@ namespace Test
 			std::cout << "bin.data(): " << bin.data() << std::endl;
 			std::cout << "bin.size(): " << bin.size() << std::endl;
 
-			if ( strlen(test)+1 != bin.size() ) {
+			if ( test.size()+1 != bin.size() ) {
 				return false;
 			}
 
-			if ( memcmp(bin.data(),test, bin.size()) ) {
+			if ( memcmp(bin.data(), test.c_str(), bin.size()) ) {
 				return false;
 			}
 
