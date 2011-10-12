@@ -128,6 +128,9 @@ namespace YAML
 			}
 			
 			bool IsValidPlainScalar(const std::string& str, bool inFlow, bool allowOnlyAscii) {
+				if(str.empty())
+					return false;
+				
 				// first check the start
 				const RegEx& start = (inFlow ? Exp::PlainScalarInFlow() : Exp::PlainScalar());
 				if(!start.Matches(str))
@@ -267,7 +270,7 @@ namespace YAML
 		
 		bool WriteComment(ostream& out, const std::string& str, int postCommentIndent)
 		{
-			unsigned curIndent = out.col();
+			const unsigned curIndent = out.col();
 			out << "#" << Indentation(postCommentIndent);
 			int codePoint;
 			for(std::string::const_iterator i = str.begin();
