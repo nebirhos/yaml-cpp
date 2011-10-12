@@ -23,7 +23,7 @@ project(YAML_CPP)
 
 set(YAML_CPP_VERSION_MAJOR "0")
 set(YAML_CPP_VERSION_MINOR "2")
-set(YAML_CPP_VERSION_PATCH "6")
+set(YAML_CPP_VERSION_PATCH "7")
 set(YAML_CPP_VERSION "${YAML_CPP_VERSION_MAJOR}.${YAML_CPP_VERSION_MINOR}.${YAML_CPP_VERSION_PATCH}")
 
 enable_testing()
@@ -209,7 +209,9 @@ else()
 	set(_library_dir lib)
 endif()
 
-set(INCLUDE_INSTALL_DIR include/yaml-cpp)
+set(INCLUDE_INSTALL_ROOT_DIR include)
+
+set(INCLUDE_INSTALL_DIR ${INCLUDE_INSTALL_ROOT_DIR}/yaml-cpp)
 set(LIB_INSTALL_DIR "${_library_dir}${LIB_SUFFIX}")
 
 set(_INSTALL_DESTINATIONS
