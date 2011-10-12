@@ -6,9 +6,9 @@ GoogleCode[http://code.google.com/p/yaml-cpp/].
 
 Branch _master_ reflects the original mercurial branch, branch
 _makefile_ contains some improvements and a simplified, ready-to-go
-Makefile for building a static library. Other branches are for
-experimental features that maybe integrated in the future. Refer to
-the changelog for a list of differences from the original repository.
+Makefile for building a static library.
+Refer to the changelog for a list of differences from the original
+repository.
 
 
 === Getting started
@@ -21,6 +21,7 @@ to compile the static library. For more building options use Cmake
 
 === Changelog
 
+* 2011-10-12: merged _release-0.2.7_ into _makefile_ 
 * 2011-09-06: <b>BREAKING CHANGE:</b> repository now tracks mercurial,
   old clones of this repository don't work anymore!
 * 2011-04-08: fixed a nasty bug on binary data emitter
