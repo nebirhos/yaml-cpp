@@ -882,10 +882,11 @@ namespace Test
 			return true;
 		}
 
-		bool BinaryData()
+		bool Binary()
 		{
-			std::string test = "ciao";
-			std::string input = "{b: !!binary \"Y2lhbwA=\"}"; // ciao
+			std::string data = "The Narwhal Bacons at Midnight";
+			std::string input = "{b: !!binary \"VGhlIE5hcndoYWwgQmFjb25zIGF0IE1pZG5pZ2h0\"}";
+
 			std::stringstream stream(input);
 			YAML::Parser parser(stream);
 			YAML::Node doc;
@@ -893,15 +894,79 @@ namespace Test
 
 			YAML::BinaryInput bin;
 			doc["b"] >> bin;
-			std::cout << "bin.data(): " << bin.data() << std::endl;
-			std::cout << "bin.size(): " << bin.size() << std::endl;
 
-			if ( test.size()+1 != bin.size() ) {
+			if ( data.size() != bin.size() ) {
 				return false;
 			}
 
-			if ( memcmp(bin.data(), test.c_str(), bin.size()) ) {
+			if ( memcmp(bin.data(), data.c_str(), bin.size()) ) {
 				return false;
+			}
+
+			return true;
+		}
+
+		bool FullRangeBinary()
+		{
+			unsigned char data[256];
+			for (int i = 255; i >= 0; --i) data[i] = i;
+			std::string input = "{b: !!binary \"AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1Njc4OTo7PD0+P0BBQkNERUZHSElKS0xNTk9QUVJTVFVWV1hZWltcXV5fYGFiY2RlZmdoaWprbG1ub3BxcnN0dXZ3eHl6e3x9fn+AgYKDhIWGh4iJiouMjY6PkJGSk5SVlpeYmZqbnJ2en6ChoqOkpaanqKmqq6ytrq+wsbKztLW2t7i5uru8vb6/wMHCw8TFxsfIycrLzM3Oz9DR0tPU1dbX2Nna29zd3t/g4eLj5OXm5+jp6uvs7e7v8PHy8/T19vf4+fr7/P3+/w==\"}";
+
+			std::stringstream stream(input);
+			YAML::Parser parser(stream);
+			YAML::Node doc;
+			parser.GetNextDocument(doc);
+
+			YAML::BinaryInput bin;
+			doc["b"] >> bin;
+
+			if ( bin.size() != 256 ) {
+				return false;
+			}
+
+			if ( memcmp(bin.data(), data, bin.size()) ) {
+				return false;
+			}
+
+			return true;
+		}
+
+		bool EmptyBinary()
+		{
+			std::string data = "";
+			std::string input = "{b: !!binary \"\"}";
+
+			std::stringstream stream(input);
+			YAML::Parser parser(stream);
+			YAML::Node doc;
+			parser.GetNextDocument(doc);
+
+			YAML::BinaryInput bin;
+			doc["b"] >> bin;
+
+			if ( data.size() != 0 ) {
+				return false;
+			}
+
+			return true;
+		}
+
+		bool InvalidBinary()
+		{
+			std::string data = "Invalid!";
+			std::string input = "{b: !!binary \"???\"}";
+
+			std::stringstream stream(input);
+			YAML::Parser parser(stream);
+			YAML::Node doc;
+			parser.GetNextDocument(doc);
+
+			YAML::BinaryInput bin;
+			try {
+				doc["b"] >> bin;
+			} catch(const YAML::Exception& e) {
+				if( e.msg != std::string(YAML::ErrorMsg::INVALID_SCALAR) )
+					throw;
 			}
 
 			return true;
@@ -1185,7 +1250,10 @@ namespace Test
 		RunParserTest(&Parser::Infinity, "infinity", passed, total);
 		RunParserTest(&Parser::NaN, "NaN", passed, total);
 		RunParserTest(&Parser::NonConstKey, "non const key", passed, total);
-		RunParserTest(&Parser::BinaryData, "binary data", passed, total);
+		RunParserTest(&Parser::Binary, "binary", passed, total);
+		RunParserTest(&Parser::FullRangeBinary, "full range binary", passed, total);
+		RunParserTest(&Parser::EmptyBinary, "empty binary", passed, total);
+		RunParserTest(&Parser::InvalidBinary, "invalid binary", passed, total);
 		
 		RunEncodingTest(&EncodeToUtf8, false, "UTF-8, no BOM", passed, total);
 		RunEncodingTest(&EncodeToUtf8, true, "UTF-8 with BOM", passed, total);
