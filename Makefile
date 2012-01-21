@@ -3,11 +3,11 @@ AR = ar
 LIBRARY = libyaml-cpp.a
 TEST    = yaml-cpp-test
 OBJECTS = $(SOURCES:.cpp=.o)
-CPPFLAGS += -Iinclude/
+CPPFLAGS += -Iinclude/ -Itest/
 CXXFLAGS += -Wall
 
 SOURCES = $(wildcard src/*.cpp)
-TEST_SOURCES = $(wildcard test/*.cpp)
+TEST_SOURCES = $(wildcard test/*.cpp test/old-api/*.cpp)
 TEST_OBJECTS = $(TEST_SOURCES:.cpp=.o)
 
 all: $(LIBRARY)

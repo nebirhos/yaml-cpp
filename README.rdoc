@@ -4,9 +4,11 @@
 This is just a mirror of the project on
 GoogleCode[http://code.google.com/p/yaml-cpp/].
 
-Branch _master_ reflects the original mercurial branch, branch
-_makefile_ contains some improvements and a simplified, ready-to-go
-Makefile for building a static library.
+All branches reflects the original mercurial branches, except for:
+* _makefile_: contains some improvements and a simplified, ready-to-go
+  Makefile for building a static library.
+* _binary_: old sketch for YAML::Binary parser (implemented in _release-0.3.0_)
+
 Refer to the changelog for a list of differences from the original
 repository.
 
@@ -16,11 +18,12 @@ repository.
 Just type
  $ make
 to compile the static library. For more building options use Cmake
-(see the documentation here[http://code.google.com/p/yaml-cpp/]).
+(see install.txt).
 
 
 === Changelog
 
+* 2012-01-21: merged _release-0.3.0_ into _makefile_
 * 2011-10-12: merged _release-0.2.7_ into _makefile_ 
 * 2011-09-06: <b>BREAKING CHANGE:</b> repository now tracks mercurial,
   old clones of this repository don't work anymore!
