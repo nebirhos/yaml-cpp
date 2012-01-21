@@ -6,13 +6,13 @@
 #endif
 
 
-#include "yaml-cpp/conversion.h"
 #include "yaml-cpp/dll.h"
 #include "yaml-cpp/exceptions.h"
-#include "yaml-cpp/iterator.h"
-#include "yaml-cpp/ltnode.h"
 #include "yaml-cpp/mark.h"
 #include "yaml-cpp/noncopyable.h"
+#include "yaml-cpp/conversion.h"
+#include "yaml-cpp/iterator.h"
+#include "yaml-cpp/ltnode.h"
 #include <iostream>
 #include <map>
 #include <memory>
@@ -66,7 +66,7 @@ namespace YAML
 		const T to() const;
 
 		template <typename T>
-		friend YAML_CPP_API void operator >> (const Node& node, T& value);
+		friend YAML_CPP_API typename enable_if<is_scalar_convertible<T> >::type operator >> (const Node& node, T& value);
 
 		// retrieval for maps and sequences
 		template <typename T>

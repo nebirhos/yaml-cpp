@@ -39,7 +39,6 @@ void parse(std::istream& input)
 	try {
 		YAML::Parser parser(input);
 		YAML::Node doc;
-		NullEventHandler handler;
 		while(parser.GetNextDocument(doc)) {
 			YAML::Emitter emitter;
 			emitter << doc;

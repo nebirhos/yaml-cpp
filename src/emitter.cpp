@@ -93,6 +93,16 @@ namespace YAML
 	{
 		return m_pState->SetPostCommentIndent(n, GLOBAL);
 	}
+    
+    bool Emitter::SetFloatPrecision(unsigned n)
+    {
+        return m_pState->SetFloatPrecision(n, GLOBAL);
+    }
+
+    bool Emitter::SetDoublePrecision(unsigned n)
+    {
+        return m_pState->SetDoublePrecision(n, GLOBAL);
+    }
 
 	// SetLocalValue
 	// . Either start/end a group, or set a modifier locally
@@ -144,6 +154,15 @@ namespace YAML
 		m_pState->SetIndent(indent.value, LOCAL);
 		return *this;
 	}
+
+    Emitter& Emitter::SetLocalPrecision(const _Precision& precision)
+    {
+        if(precision.floatPrecision >= 0)
+            m_pState->SetFloatPrecision(precision.floatPrecision, LOCAL);
+        if(precision.doublePrecision >= 0)
+            m_pState->SetDoublePrecision(precision.doublePrecision, LOCAL);
+        return *this;
+    }
 
 	// GotoNextPreAtomicState
 	// . Runs the state machine, emitting if necessary, and returns 'true' if done (i.e., ready to emit an atom)
@@ -651,9 +670,11 @@ namespace YAML
 				str << std::dec;
 				break;
 			case Hex:
+                str << "0x";
 				str << std::hex;
 				break;
-				case Oct:
+			case Oct:
+                str << "0";
 				str << std::oct;
 				break;
 			default:
@@ -661,12 +682,21 @@ namespace YAML
 		}
 	}
 
-	void Emitter::PreWriteStreamable(std::stringstream& str)
+	void Emitter::PreWriteStreamable(std::stringstream&)
 	{
 		PreAtomicWrite();
 		EmitSeparationIfNecessary();
-		str.precision(15);
 	}
+
+    unsigned Emitter::GetFloatPrecision() const
+    {
+        return m_pState->GetFloatPrecision();
+    }
+    
+    unsigned Emitter::GetDoublePrecision() const
+    {
+        return m_pState->GetDoublePrecision();
+    }
 
 	void Emitter::PostWriteIntegralType(const std::stringstream& str)
 	{
@@ -729,6 +759,20 @@ namespace YAML
 		else
 			m_stream << name;
 
+		PostAtomicWrite();
+		return *this;
+	}
+
+	Emitter& Emitter::Write(char ch)
+	{
+		if(!good())
+			return *this;
+		
+		PreAtomicWrite();
+		EmitSeparationIfNecessary();
+		
+		Utils::WriteChar(m_stream, ch);
+		
 		PostAtomicWrite();
 		return *this;
 	}
@@ -821,7 +865,7 @@ namespace YAML
 		return *this;
 	}
 
-	Emitter& Emitter::Write(const _Binary& binary)
+	Emitter& Emitter::Write(const Binary& binary)
 	{
 		Write(SecondaryTag("binary"));
 
@@ -830,7 +874,7 @@ namespace YAML
 		
 		PreAtomicWrite();
 		EmitSeparationIfNecessary();
-		Utils::WriteBinary(m_stream, binary.data, binary.size);
+		Utils::WriteBinary(m_stream, binary);
 		PostAtomicWrite();
 		return *this;
 	}

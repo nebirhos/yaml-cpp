@@ -137,7 +137,7 @@ namespace YAML
 		// . In the block context - ? : must be not be followed with a space.
 		// . In the flow context ? is illegal and : and - must not be followed with a space.
 		inline const RegEx& PlainScalar() {
-			static const RegEx e = !(BlankOrBreak() || RegEx(",[]{}#&*!|>\'\"%@`", REGEX_OR) || (RegEx("-?:", REGEX_OR) + Blank()));
+			static const RegEx e = !(BlankOrBreak() || RegEx(",[]{}#&*!|>\'\"%@`", REGEX_OR) || (RegEx("-?:", REGEX_OR) + (BlankOrBreak() || RegEx())));
 			return e;
 		}
 		inline const RegEx& PlainScalarInFlow() {
@@ -149,7 +149,7 @@ namespace YAML
 			return e;
 		}
 		inline const RegEx& EndScalarInFlow() {
-			static const RegEx e = (RegEx(':') + (BlankOrBreak() || RegEx(",]}", REGEX_OR))) || RegEx(",?[]{}", REGEX_OR);
+			static const RegEx e = (RegEx(':') + (BlankOrBreak() || RegEx() || RegEx(",]}", REGEX_OR))) || RegEx(",?[]{}", REGEX_OR);
 			return e;
 		}
 

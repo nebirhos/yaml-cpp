@@ -22,8 +22,8 @@ include(CheckCXXCompilerFlag)
 project(YAML_CPP)
 
 set(YAML_CPP_VERSION_MAJOR "0")
-set(YAML_CPP_VERSION_MINOR "2")
-set(YAML_CPP_VERSION_PATCH "7")
+set(YAML_CPP_VERSION_MINOR "3")
+set(YAML_CPP_VERSION_PATCH "0")
 set(YAML_CPP_VERSION "${YAML_CPP_VERSION_MAJOR}.${YAML_CPP_VERSION_MINOR}.${YAML_CPP_VERSION_PATCH}")
 
 enable_testing()
@@ -51,14 +51,15 @@ option(APPLE_UNIVERSAL_BIN "Apple: Build universal binary" OFF)
 option(MSVC_SHARED_RT "MSVC: Build with shared runtime libs (/MD)" ON)
 option(MSVC_STHREADED_RT "MSVC: Build with single-threaded static runtime libs (/ML until VS .NET 2003)" OFF)
 
-
 ###
 ### Sources, headers, directories and libs
 ###
+set(header_directory "include/yaml-cpp/")
+
 file(GLOB sources "src/[a-zA-Z]*.cpp")
 file(GLOB public_headers "include/yaml-cpp/[a-zA-Z]*.h")
 file(GLOB private_headers "src/[a-zA-Z]*.h")
- 
+
 if(YAML_CPP_BUILD_CONTRIB)
 	file(GLOB contrib_sources "src/contrib/[a-zA-Z]*.cpp")
 	file(GLOB contrib_public_headers "include/yaml-cpp/contrib/[a-zA-Z]*.h")
@@ -77,6 +78,7 @@ if(VERBOSE)
 endif()
 
 include_directories(${YAML_CPP_SOURCE_DIR}/include)
+include_directories(${YAML_CPP_SOURCE_DIR}/src)
 
 
 ###
@@ -259,10 +261,9 @@ endif()
 
 install(TARGETS yaml-cpp ${_INSTALL_DESTINATIONS})
 install(
-	FILES
-		${public_headers}
-		${contrib_public_headers}
+	DIRECTORY ${header_directory}
 	DESTINATION ${INCLUDE_INSTALL_DIR}
+	FILES_MATCHING PATTERN "*.h"
 )
 
 if(UNIX)

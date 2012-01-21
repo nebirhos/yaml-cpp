@@ -1,5 +1,6 @@
 #include "tests.h"
 #include "yaml-cpp/yaml.h"
+#include <iostream>
 
 namespace Test
 {
@@ -544,12 +545,12 @@ namespace Test
 		void CommentInFlowMap(YAML::Emitter& out, std::string& desiredOutput)
 		{
 			out << YAML::Flow << YAML::BeginMap;
-			out << YAML::Key << "foo" << YAML::Comment("foo!") << YAML::Value << "foo value";
+			out << YAML::Key << "foo" << YAML::Value << "foo value";
 			out << YAML::Key << "bar" << YAML::Value << "bar value" << YAML::Comment("bar!");
-			out << YAML::Key << "baz" << YAML::Comment("baz!") << YAML::Value << "baz value" << YAML::Comment("baz!");
+			out << YAML::Key << "baz" << YAML::Value << "baz value" << YAML::Comment("baz!");
 			out << YAML::EndMap;
 			
-			desiredOutput = "{foo  # foo!\n: foo value, bar: bar value  # bar!\n, baz  # baz!\n: baz value  # baz!\n}";
+			desiredOutput = "{foo: foo value, bar: bar value  # bar!\n, baz: baz value  # baz!\n}";
 		}
 
 		void Indentation(YAML::Emitter& out, std::string& desiredOutput)
@@ -736,9 +737,9 @@ namespace Test
 		{
 			out << YAML::Flow << YAML::BeginMap;
 			out << YAML::Key << "a" << YAML::Value << "foo" << YAML::Newline;
-			out << YAML::Key << "b" << YAML::Newline << YAML::Value << "bar";
+			out << YAML::Key << "b" << YAML::Value << "bar";
 			out << YAML::EndMap;
-			desiredOutput = "{a: foo\n, b\n: bar}";
+			desiredOutput = "{a: foo\n, b: bar}";
 		}
 		
 		void LotsOfNewlines(YAML::Emitter& out, std::string& desiredOutput)
@@ -796,6 +797,12 @@ namespace Test
 			out << YAML::Key << "banana" << YAML::Value << ":";
 			out << YAML::EndMap;
 			desiredOutput = "apple: \":\"\nbanana: \":\"";
+		}
+		
+		void ColonAtEndOfScalarInFlow(YAML::Emitter& out, std::string& desiredOutput)
+		{
+			out << YAML::Flow << YAML::BeginMap << YAML::Key << "C:" << YAML::Value << "C:" << YAML::EndMap;
+			desiredOutput = "{\"C:\": \"C:\"}";
 		}
 		
 		void BoolFormatting(YAML::Emitter& out, std::string& desiredOutput)
@@ -862,8 +869,57 @@ namespace Test
 			out << YAML::EndMap;
 			desiredOutput = "key: \"\"";
 		}
+		
+		void SingleChar(YAML::Emitter& out, std::string& desiredOutput)
+		{
+			out << YAML::BeginSeq;
+			out << 'a';
+			out << ':';
+			out << (char)0x10;
+			out << '\n';
+			out << ' ';
+			out << '\t';
+			out << YAML::EndSeq;
+			desiredOutput = "- a\n- \":\"\n- \"\\x10\"\n- \"\\n\"\n- \" \"\n- \"\\t\"";
+		}
+        
+        void DefaultPrecision(YAML::Emitter& out, std::string& desiredOutput)
+        {
+            out << YAML::BeginSeq;
+            out << 1.234f;
+            out << 3.14159265358979;
+            out << YAML::EndSeq;
+            desiredOutput = "- 1.234\n- 3.14159265358979";
+        }
 
-		////////////////////////////////////////////////////////////////////////////////////////////////////////
+        void SetPrecision(YAML::Emitter& out, std::string& desiredOutput)
+        {
+            out << YAML::BeginSeq;
+            out << YAML::FloatPrecision(3) << 1.234f;
+            out << YAML::DoublePrecision(6) << 3.14159265358979;
+            out << YAML::EndSeq;
+            desiredOutput = "- 1.23\n- 3.14159";
+        }
+        
+        void DashInBlockContext(YAML::Emitter& out, std::string& desiredOutput)
+        {
+            out << YAML::BeginMap;
+            out << YAML::Key << "key" << YAML::Value << "-";
+            out << YAML::EndMap;
+            desiredOutput = "key: \"-\"";
+        }
+        
+        void HexAndOct(YAML::Emitter& out, std::string& desiredOutput)
+        {
+            out << YAML::Flow << YAML::BeginSeq;
+            out << 31;
+            out << YAML::Hex << 31;
+            out << YAML::Oct << 31;
+            out << YAML::EndSeq;
+            desiredOutput = "[31, 0x1f, 037]";
+        }
+        
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// incorrect emitting
 		
 		void ExtraEndSeq(YAML::Emitter& out, std::string& desiredError)
@@ -1072,10 +1128,16 @@ namespace Test
 		RunEmitterTest(&Emitter::EmptyBinary, "empty binary", passed, total);
 		RunEmitterTest(&Emitter::ColonAtEndOfScalar, "colon at end of scalar", passed, total);
 		RunEmitterTest(&Emitter::ColonAsScalar, "colon as scalar", passed, total);
+		RunEmitterTest(&Emitter::ColonAtEndOfScalarInFlow, "colon at end of scalar in flow", passed, total);
 		RunEmitterTest(&Emitter::BoolFormatting, "bool formatting", passed, total);
 		RunEmitterTest(&Emitter::DocStartAndEnd, "doc start and end", passed, total);
 		RunEmitterTest(&Emitter::ImplicitDocStart, "implicit doc start", passed, total);
 		RunEmitterTest(&Emitter::EmptyString, "empty string", passed, total);
+		RunEmitterTest(&Emitter::SingleChar, "single char", passed, total);
+		RunEmitterTest(&Emitter::DefaultPrecision, "default precision", passed, total);
+		RunEmitterTest(&Emitter::SetPrecision, "set precision", passed, total);
+		RunEmitterTest(&Emitter::DashInBlockContext, "dash in block context", passed, total);
+		RunEmitterTest(&Emitter::HexAndOct, "hex and oct", passed, total);
 		
 		RunEmitterErrorTest(&Emitter::ExtraEndSeq, "extra EndSeq", passed, total);
 		RunEmitterErrorTest(&Emitter::ExtraEndMap, "extra EndMap", passed, total);
